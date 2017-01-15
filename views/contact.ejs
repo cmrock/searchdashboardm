@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include head %>
+</head>
+<body ng-app="myapp">
+<% include header %>
+<div class="container-fluid">
+    <section class="container">
+        <div class="container-page">
+            <div class="col-md-12">
+                <form class="form-horizontal" role="form" style="width: 50%;margin-top: 10px;" name="contactform">
+                    <h3 class="dark-grey">Contact Us</h3>
+                    <div class="form-group">
+                        <label for="name" class="col-sm-2 control-label">Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="name" name="name"
+                                   placeholder="First & Last Name" value="" ng-model="name" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="col-sm-2 control-label">Email</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control" id="email" name="email"
+                                   placeholder="example@domain.com" value="" ng-model="email" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="message" class="col-sm-2 control-label">Message</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="4" name="message" id="smessage" ng-model="message" required></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-10 col-sm-offset-2">
+                            <input id="submit" name="submit" type="submit" value="Send" class="btn btn-primary" ng-disabled="contactform.$invalid">
+                        </div>
+                    </div>
+                    <div id="fmessage" style="color: red"></div>
+                    <div class="form-group">
+                        <div class="col-sm-10 col-sm-offset-2">
+                            <! Will be used to display an alert to the user>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+<% include footer %>
+</html>
+<script>
+    $(document).ready(function(){
+        var name,email,message;
+        $("#submit").click(function(){
+            name = $("#name").val();
+            email=$("#email").val();
+            message=$("#smessage").val();
+
+            /*
+             * Perform some validation here.
+             */
+            $.post("/contacts",{name:name,email:email,message:message},function(data){
+                if(data==='success')
+                {
+                    $("#fmessage").empty();
+                    $("#fmessage").append("<p>Your query posted successfully. We will back to you with in the next 24 hours...!!!</p>");
+                }
+                else {
+                    $("#fmessage").empty();
+                    $("#name").empty();
+                    $("#email").empty();
+                    $("#smessage").empty();
+                    $("#fmessage").append("<p>Some error occured.</p>");
+                }
+            });
+        });
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "search_dashborad",
+  "version": "1.0.0",
+  "description": "search dashborad ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.1.2",
+    "crypto-md5": "^1.0.0",
+    "ejs": "^2.5.2",
+    "express": "^4.14.0",
+    "mongodb": "^2.2.19",
+    "socket.io": "^1.5.1"
+  }
+}

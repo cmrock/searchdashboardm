@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include head %>
+</head>
+<body  ng-app="myapp">
+<% include admin-header.ejs %>
+<div class="container-fluid">
+    <section class="container">
+        <div class="container-page">
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <h3>Add New Category</h3>
+                    <form name="category">
+                        <div class="form-group">
+                            <label for="inputcategory">Category Name</label>
+                            <input type="text" class="form-control" id="inputcategory" required ng-model="catname" placeholder="Category" style="width: 50%;">
+                            <label for="description" style="margin-top: 10px;">Description</label>
+                            <textarea name="description" class="form-control" required ng-model="catdesc" id="description" style="width: 50%;height: 100px;"></textarea>
+                            <label>Website</label>
+                            <input type="text" class="form-control" id="inputwebsite" required ng-model="websitename" placeholder="Website" style="width: 50%;">
+                        </div>
+                        <button type="submit" id="submit" class="btn btn-primary" ng-disabled="category.$invalid">Submit</button>
+                        <p id="msgcat" style="display: none;">Category saved successfully</p>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <h3>Remove Category</h3>
+                    <form name="removecategory">
+                        <div class="form-group">
+                            <label for="registeredIndicator">Chooce Category</label>
+                            <select class="input-medium form-control" id="categoryid" required ng-model="categoryid"  style="width: 50%;">
+                                <option value="">Select</option>
+                                <% for(var i=0; i<category.length; i++) {%>
+                                <option value="<%= category[i].id %>"><%= category[i].Name %></option>
+                                <% } %>
+                            </select>
+                        </div>
+                        <button type="submit" id="removecategory" class="btn btn-danger" ng-disabled="removecategory.$invalid">Delete</button>
+                        <p id="removecat" style="display: none;">Category removed successfully</p>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<% include footer %>
+</body>
+</html>
+<script>
+    $(document).ready(function(){
+        var category,description,website;
+        $("#submit").click(function(){
+            category=$("#inputcategory").val();
+            description=$("#description").val();
+            website=$("#inputwebsite").val();
+            /*
+             * Perform some validation here.
+             */
+            $.post("/addCategory",{categoryname:category,description:description,website:website},function(data){
+                if(data==='done')
+                {
+                    window.location.href="/admin-dashboard";
+                    $("#msgcat").show();
+                }
+                else {
+                    // window.location.href="/login";
+                    res.render('Login.ejs',{message:'errorMessage'});
+                    //res.render('login',{user: "Great User",title:"homepage"});
+                }
+            });
+        });
+        $("#removecategory").click(function(){
+            var category_id = $("#categoryid").val();
+            /*
+             * Perform some validation here.
+             */
+            $.post("/removeCategory",{categoryid:category_id},function(data){
+                if(data==='done')
+                {
+                    window.location.href="/admin-dashboard";
+                    $("#removecat").show();
+                }
+                else {
+                    alert("Unable to delete. Some error occured!!");
+                }
+            });
+        });
+    });
+</script>

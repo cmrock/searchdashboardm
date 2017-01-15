@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include head %>
+</head>
+<body  ng-app="myapp">
+<% include header_logged.ejs %>
+<div class="container-fluid">
+    <section class="container">
+        <div class="container-page">
+            <h1>Profile</h1>
+            <div class="col-md-12">
+                <div class="col-md-3"><h4>Name :</h4></div>
+                <div class="col-lg-9"><h4 class="text-lowercase"><%= usersinfo[0].Name; %></h4></div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-3"><h4>DOB (Date of Birth) :</h4></div>
+                <div class="col-lg-9"><h4 class="text-lowercase"><%= usersinfo[0].Dob; %></h4></div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-3"><h4>Email :</h4></div>
+                <div class="col-lg-9"><h4 class="text-lowercase"><%= usersinfo[0].Email; %></h4></div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-3"><h4>Organization :</h4></div>
+                <div class="col-lg-9"><h4 class="text-lowercase"><%= usersinfo[0].Organization; %></h4></div>
+            </div>
+            <div class="col-md-12 edit_info">
+                <a class="btn btn-danger" href="/editprofile">Edit Info</a>
+                <a class="btn btn-danger" href="/ChangePassword" style="margin-left: 15px;">Change Password</a>
+            </div>
+        </div>
+    </section>
+</div>
+
+<% include footer %>
+</body>
+</html>

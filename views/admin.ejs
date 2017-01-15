@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include head %>
+</head>
+<body  ng-app="myapp">
+<% include header %>
+<div class="container-fluid">
+    <section class="container">
+        <div class="container-page">
+            <div class="col-md-6">
+                <form name="login">
+                    <h3 class="dark-grey">Admin Login</h3>
+
+                    <div class="form-group col-lg-12">
+                        <label>Email</label>
+                        <input type="email" name="email" class="form-control" id="email" value="" ng-model="adminemail" required>
+                    </div>
+
+                    <div class="form-group col-lg-12">
+                        <label>Password</label>
+                        <input type="password" name="password" class="form-control" id="password" value="" ng-model="adminpassword" required>
+                    </div>
+                    <div id="fmessage" style="color: red"></div>
+                    <div class="form-group col-lg-12">
+                        <input type="submit" name="" class="btn btn-danger" id="submit" value="Login" ng-disabled="login.$invalid">
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </section>
+</div>
+<% include footer %>
+</body>
+
+</html>
+<script>
+    $(document).ready(function(){
+        var email,pass;
+        $("#submit").click(function(){
+            email=$("#email").val();
+            pass=$("#password").val();
+            /*
+             * Perform some validation here.
+             */
+            if(email == 'admin@searchdashboard.com') {
+            $.post("/adminlogin",{email:email,pass:pass},function(data){
+                if(data==='done')
+                {
+                    window.location.href="/admin-dashboard";
+                }
+                else {
+                    $("#fmessage").empty();
+                    $("#fmessage").append("<p>email or password you entered is incorrect</p>");
+                }
+            });
+            } else  {
+                window.location.href = "/login";
+            }
+        });
+    });
+</script>

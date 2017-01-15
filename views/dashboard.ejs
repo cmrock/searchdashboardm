@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <% include head %>
+</head>
+<body  ng-app="myapp">
+
+
+
+<% include header_logged.ejs %>
+        <!---->
+<div class="container-fluid">
+    <div class="container">
+        <div class="container-page">
+            <div class="col-md-12">
+                <div class="panel with-nav-tabs panel-default">
+                    <div class="panel-heading">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tab1default" data-toggle="tab">Local Search</a></li>
+                            <li><a href="#tab2default" data-toggle="tab">Google Custom Search</a></li>
+
+                        </ul>
+                    </div>
+                    <div class="panel-body">
+                        <div class="tab-content">
+                            <div class="tab-pane fade in active" id="tab1default">
+                                <form name="searchdata">
+                                    <div class="col-md-12">
+                                        <div class="form-group" style="margin-top: 20px">
+                                            <div class="col-md-2">
+                                                <label for="search">Search Keyword :</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" id="search" required ng-model="search">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-lg-2">
+                                            <label for="search">Choose Category :</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <% for(var i=0; i<categorylist.length; i++) {%>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input id="<%= categorylist[i].id %>" type="checkbox"><%= categorylist[i].Name %></input>
+                                                    </label>
+                                                </div>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-2"></div>
+                                        <div class="col-md-4"><button type="submit" id="submit" class="btn btn-primary" ng-disabled="searchdata.$invalid">Submit</button></div>
+                                    </div>
+                                </form>
+                                <div class="col-md-12" id="searchresult">
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="tab2default">
+                                <script>
+                                    (function() {
+                                        var cx = '001402949329970774887:nzulo_jzyrw';
+                                        var gcse = document.createElement('script');
+                                        gcse.type = 'text/javascript';
+                                        gcse.async = true;
+                                        gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+                                        var s = document.getElementsByTagName('script')[0];
+                                        s.parentNode.insertBefore(gcse, s);
+                                    })();
+                                </script>
+                                <gcse:search></gcse:search>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include footer %>
+</body>
+</html>
+<script>
+    $(document).ready(function(){
+        $(".panel").css("margin-top","70px")
+        $("#submit").click(function(){
+            var search = $("#search").val();
+
+            /*
+             * Perform some validation here.
+             */
+            getAndRenderData(search);
+        });
+        function getAndRenderData(search) {
+            var data = JSON.stringify({ keyword: search });
+            $.ajax({
+                url: "http://localhost:1337/searchResult/",
+                // the URL for the request
+                type: "POST",
+                // whether this is a POST or GET request
+                contentType: "application/json",
+                data: data,
+                // the type of data we expect back
+                success: function (responseJson) {
+                   // alert(responseJson);
+                    var obj = jQuery.parseJSON(responseJson);
+                    var objlength = obj.length;
+                    if( objlength > 0) {
+                        $('#searchresult').empty();
+                        $.each(obj, function (key, value) {
+                            $('#searchresult').append('<div class="col-md-12 list_result"><h4>' + value.Name + '</h4><p>' + value.Description + '</p><p><a target="_blank" href=' + value.Website + '>' + value.Website + '</a></p></div>');
+                        });
+                    } else {
+                        $('#searchresult').empty();
+                        //
+                        $('#searchresult').append('<div class="col-md-12"><p>Sorry...No Keyword found..!! Search another keyword</p></div>');
+                    }
+
+                },
+                error: function (xhr, status) {
+                    // code run if request fails; raw request and status
+                    console.log("Sorry, there was a problem!");
+                },
+                complete: function (xhr, status) {  	// code to run regardless of success or failure
+                    console.log("The request is complete!");
+                }
+            })
+        }
+
+
+
+
+        /*
+        getGoogleSearchResult('text');
+        function getGoogleSearchResults(q) {
+
+            // Get the API key from Google's developer console
+            // Get the CSE ID from google.com/cse
+
+            var api = "https://www.googleapis.com/customsearch/v1?key="
+                + KEY + "&cx=" + CSE + "&q=" + encodeURIComponent(q);
+
+            try {
+
+                var response = UrlFetchApp.fetch(api, {
+                    muteHttpExceptions: true
+                });
+
+                if (response.getResponseCode() == 200) {
+
+                    var content = JSON.parse(response);
+
+                    // Did the search return any results?
+                    if (content.searchInformation.totalResults > 0) {
+
+                        var count = content.items.length;
+
+                        for (var i = 0; i < count; i++) {
+
+                            // Save the page title, description and hyperlink
+                            Logger.log(content.items[i].title);
+                            Logger.log(content.items[i].snippet);
+                            Logger.log(content.items[i].link);
+                        }
+                    }
+                }
+            } catch (f) {
+                Logger.log(f.toString());
+            }
+
+        }*/
+
+
+
+
+
+    });
+</script>

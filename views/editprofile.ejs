@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include head %>
+</head>
+<body  ng-app="myapp">
+<% include header_logged.ejs %>
+<div class="container-fluid">
+    <section class="container">
+        <div class="container-page editprofile">
+            <h1>Profile</h1>
+            <div class="col-md-12">
+                <div class="col-md-3"><h4>Name :</h4></div>
+                <div class="col-lg-9"> <input type="text" name="fname" class="form-control" id="editname" value="<%= usersinfo[0].Name; %>"></div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-3"><h4>DOB (Date of Birth) :</h4></div>
+                <div class="col-lg-9"><input class="form-control" id="editdatepicker" name="date123" placeholder="MM/DD/YYYY" type="text" value="<%= usersinfo[0].Dob; %>"></div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-3"><h4>Email :</h4></div>
+                <div class="col-lg-9"><input type="email" name="email" class="form-control" id="email" value="<%= usersinfo[0].Email; %>" readonly></div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-3"><h4>Organization :</h4></div>
+                <div class="col-lg-9"><input type="text" name="org" class="form-control" id="editorg" value="<%= usersinfo[0].Organization; %>"></div>
+            </div>
+            <div class="col-md-12 edit_info">
+                <a class="btn btn-danger" id="saveeditinfo">Save</a>
+            </div>
+        </div>
+    </section>
+</div>
+
+<% include footer %>
+</body>
+</html>
+<script>
+$(document).ready(function(){
+    var name,dob,org,email;
+    $("#saveeditinfo").click(function(){
+        email = $("#email").val();
+        name = $("#editname").val();
+        dob = $("#editdatepicker").val();
+        org = $("#editorg").val();
+        /*
+         * Perform some validation here.
+         */
+        $.post("/editinfo",{name:name,dob:dob,email:email,org:org},function(data){
+            if(data==='success')
+            {
+                window.location.href="/profile";
+            }
+            else {
+			alert("Error Occurred ");
+            }
+        });
+    });
+$('#editdatepicker').datepicker({
+});
+});
+</script>

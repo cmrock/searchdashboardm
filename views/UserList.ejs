@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include head %>
+</head>
+<body  ng-app="myapp">
+<% include admin-header.ejs %>
+<div class="container-fluid">
+    <section class="container">
+        <div class="container-page editprofile">
+            <h1>User List</h1>
+            <div class="col-md-12">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>Birth Date</th>
+                        <th>Organization</th>
+                        <th>Created</th>
+                        <th>Remove</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+            <% for(var i=0; i<userlist.length; i++) {%>
+                <tr>
+                 <td><%= userlist[i].id %></td>
+                 <td><%= userlist[i].Name %></td>
+                 <td><%= userlist[i].Email %></td>
+                 <td><%= userlist[i].Dob %></td>
+                 <td><%= userlist[i].Organization %></td>
+                 <td><%= userlist[i].Created %></td>
+                 <td>
+                     <% if(userlist[i].Name != 'Admin') { %>
+                        <a href="#" class="removeuser danger" id="<%= userlist[i].id %>">
+                                <span class="fa-stack">
+                                    <i class="fa fa-square fa-stack-2x"></i> <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
+                                </span>
+                        </a>
+                     <% } %>
+                 </td>
+                </tr>
+            <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+<% include footer %>
+</body>
+</html>
+<script>
+    $(document).ready(function(){
+        var id;
+        $(".removeuser").click(function(){
+            id = $(this).attr('id');
+            if (confirm('Are you sure want to delete it?')) {
+                $.post("/removeuser",{id:id},function(data){
+                    if(data==='success')
+                    {
+                        window.location.href="/UserList";
+                    }
+                    else {
+                        alert("Unable to delete. Some error occured!!");
+                    }
+                });
+            } else {
+               return false;
+            }
+            /*
+             * Perform some validation here.
+             */
+
+        });
+    });
+</script>

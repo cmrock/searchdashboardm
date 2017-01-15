@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include head %>
+</head>
+<body  ng-app="myapp">
+<% include admin-header.ejs %>
+<div class="container-fluid">
+    <section class="container">
+        <div class="container-page editprofile">
+            <h3>Customer Query</h3>
+            <div class="col-md-12">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Message</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% for(var i=0; i<querylist.length; i++) {%>
+                    <tr>
+                        <td><%= querylist[i].id %></td>
+                        <td><%= querylist[i].Name %></td>
+                        <td><%= querylist[i].Email %></td>
+                        <td><%= querylist[i].Message %></td>
+                    </tr>
+                    <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+<% include footer %>
+</body>
+</html>
+<script>
+    $(document).ready(function(){
+        var id;
+        $(".table-link").click(function(){
+            id = $(this).attr('id');
+            if (confirm('Are you sure want to delete it?')) {
+                $.post("/removeuser",{id:id},function(data){
+                    if(data==='success')
+                    {
+                        window.location.href="/querylist";
+                    }
+                    else {
+                        window.location.href="/login";
+                    }
+                });
+            } else {
+                return false;
+            }
+        });
+    });
+</script>
